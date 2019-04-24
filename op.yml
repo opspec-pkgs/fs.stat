@@ -1,0 +1,51 @@
+description: returns stats for a path
+name: github.com/opspec-pkgs/fs.stat
+opspec: 0.1.6
+inputs:
+  dir:
+    dir:
+      description: dir to stat
+  path:
+    string:
+      description: path within dir to stat
+      default: /
+outputs:
+  stats:
+    object:
+      constraints:
+        properties:
+          exists:
+            type: boolean
+          groupId:
+            description: group id of owner
+            type: [number, "null"]
+          isDir:
+            type: boolean
+          isFile:
+            type: boolean
+          isSocket:
+            type: boolean
+          isSymlink:
+            type: boolean
+          userId:
+            description: user id of owner
+            type: [number, "null"]
+        required:
+          - exists
+          - isDir
+          - isFile
+          - isSocket
+          - isSymlink
+version: 1.0.0
+run:
+  container:
+    cmd: [ node, /cmd.js ]
+    dirs:
+      /dir: $(dir)
+    envVars:
+      path:
+    files:
+      /cmd.js:
+      /stats: $(stats)
+    image: { ref: 'node:11-alpine' }
+    workDir: /dir
